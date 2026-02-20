@@ -77,29 +77,31 @@ onBeforeUnmount(() => {
             Crypto Dashboard
           </h1>
         </div>
-        <div class="flex items-center gap-3">
-          <label
-            for="category"
-            class="text-xs text-slate-400"
-          >
-            Filtrar por categoria:
-          </label>
-          <select
-            id="category"
-            v-model="selectedCategory"
-            class="w-full min-w-45 rounded-[10px] border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white md:w-auto transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500"
-          >
-            <option value="">
-              Todas
-            </option>
-            <option
-              v-for="cat in categories || []"
-              :key="cat.category_id"
-              :value="cat.category_id"
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
+          <div class="flex items-center gap-3">
+            <label
+              for="category"
+              class="text-xs text-slate-400"
             >
-              {{ cat.name }}
-            </option>
-          </select>
+              Filtrar por categoria:
+            </label>
+            <select
+              id="category"
+              v-model="selectedCategory"
+              class="w-full min-w-45 rounded-[10px] border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white md:w-auto transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500"
+            >
+              <option value="">
+                Todas
+              </option>
+              <option
+                v-for="cat in categories || []"
+                :key="cat.category_id"
+                :value="cat.category_id"
+              >
+                {{ cat.name }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
     </header>
@@ -108,7 +110,7 @@ onBeforeUnmount(() => {
       <section>
       <div
         v-if="pending && !coins?.length"
-        class="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-4"
+        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         <div
           v-for="index in 4"
@@ -138,13 +140,13 @@ onBeforeUnmount(() => {
         </div>
         <div
           v-else
-          class="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-4"
+          class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           <NuxtLink
             v-for="coin in coins"
             :key="coin.id"
             :to="`/coin/${coin.id}`"
-            class="coin-card flex flex-col gap-4"
+            class="coin-card card-appear flex flex-col gap-4"
           >
             <div class="flex items-center gap-3">
               <img
