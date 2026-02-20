@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { CryptoMarket } from '../types/crypto'
+import type { CryptoCoin } from '../types/crypto'
 
 const props = defineProps<{
-  coin: CryptoMarket
+  coin: CryptoCoin
 }>()
 </script>
 
@@ -40,4 +40,3 @@ const props = defineProps<{
     </div>
   </NuxtLink>
 </template>
-

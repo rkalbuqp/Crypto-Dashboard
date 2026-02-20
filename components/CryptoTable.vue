@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { CryptoMarket } from '../types/crypto'
+import type { CryptoCoin } from '../types/crypto'
 
 const props = defineProps<{
-  markets: CryptoMarket[]
+  markets: CryptoCoin[]
 }>()
 </script>
 
@@ -27,7 +27,7 @@ const props = defineProps<{
             Market Cap
           </th>
           <th class="px-4 py-3 text-right font-medium text-slate-400">
-            Volume 24h
+            Market Cap
           </th>
         </tr>
       </thead>
@@ -74,11 +74,10 @@ const props = defineProps<{
             {{ coin.market_cap.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }) }}
           </td>
           <td class="whitespace-nowrap px-4 py-3 text-right tabular-nums text-slate-200">
-            {{ coin.total_volume.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }) }}
+            {{ coin.market_cap.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }) }}
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
-

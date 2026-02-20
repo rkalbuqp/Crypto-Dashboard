@@ -1,5 +1,29 @@
 import { getQuery } from 'h3'
-import type { CryptoDetail, CryptoMarket } from '../../types/crypto'
+import type { CryptoCoin } from '../../types/crypto'
+
+type CryptoDetail = {
+  id: string
+  symbol: string
+  name: string
+  image: {
+    large: string
+  }
+  description: {
+    en: string
+  }
+  market_data: {
+    current_price: {
+      usd: number
+    }
+    price_change_percentage_24h: number
+    market_cap: {
+      usd: number
+    }
+    total_volume: {
+      usd: number
+    }
+  }
+}
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -20,7 +44,7 @@ export default defineEventHandler(async (event) => {
     return data
   }
 
-  const data = await $fetch<CryptoMarket[]>('https://api.coingecko.com/api/v3/coins/markets', {
+  const data = await $fetch<CryptoCoin[]>('https://api.coingecko.com/api/v3/coins/markets', {
     params: {
       vs_currency: 'usd',
       order: 'market_cap_desc',
@@ -33,4 +57,3 @@ export default defineEventHandler(async (event) => {
 
   return data
 })
-

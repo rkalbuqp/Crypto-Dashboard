@@ -1,8 +1,32 @@
 import { useAsyncData } from 'nuxt/app'
-import type { CryptoDetail, CryptoMarket } from '../types/crypto'
+import type { CryptoCoin } from '../types/crypto'
+
+type CryptoDetail = {
+  id: string
+  symbol: string
+  name: string
+  image: {
+    large: string
+  }
+  description: {
+    en: string
+  }
+  market_data: {
+    current_price: {
+      usd: number
+    }
+    price_change_percentage_24h: number
+    market_cap: {
+      usd: number
+    }
+    total_volume: {
+      usd: number
+    }
+  }
+}
 
 export const useCryptoMarkets = () =>
-  useAsyncData<CryptoMarket[]>('crypto-markets', () =>
+  useAsyncData<CryptoCoin[]>('crypto-markets', () =>
     $fetch('/api/crypto')
   )
 
