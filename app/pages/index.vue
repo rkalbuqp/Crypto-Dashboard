@@ -69,7 +69,7 @@ onBeforeUnmount(() => {
   <div class="flex flex-col gap-10">
     <header class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 class="text-2xl font-semibold tracking-tight md:text-3xl">
+        <h1 class="mb-6 text-[32px] font-bold tracking-tight">
           Crypto Dashboard
         </h1>
         <p class="mt-1 text-sm text-slate-400">
@@ -79,7 +79,7 @@ onBeforeUnmount(() => {
       <div class="mt-3 flex items-center gap-3 md:mt-0">
         <label
           for="category"
-          class="text-sm text-slate-400"
+          class="text-xs text-slate-400"
         >
           Filtrar por categoria:
         </label>
@@ -151,7 +151,7 @@ onBeforeUnmount(() => {
                 loading="lazy"
               />
               <div class="min-w-0">
-                <p class="truncate text-base font-semibold text-slate-50">
+                <p class="truncate text-[16px] font-semibold text-slate-200">
                   {{ coin.name }}
                 </p>
                 <p class="text-xs uppercase text-slate-400">
@@ -163,7 +163,7 @@ onBeforeUnmount(() => {
               <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
                 Preço
               </p>
-              <p class="text-xl font-semibold tabular-nums text-slate-50">
+              <p class="text-[20px] font-semibold tabular-nums text-slate-50">
                 {{ coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
               </p>
             </div>
