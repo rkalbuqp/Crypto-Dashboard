@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useFetch } from 'nuxt/app'
-import { useCrypto } from '../composables/useCrypto'
-import type { CryptoCategory } from '../types/crypto'
+import { useCrypto } from '../../composables/useCrypto'
+import type { CryptoCategory } from '../../types/crypto'
 
 const { coins, pending, error, nextPage, setCategory, category } = useCrypto()
 
@@ -36,6 +36,10 @@ onMounted(() => {
   observer = new IntersectionObserver(
     (entries) => {
       const entry = entries[0]
+
+      if (!entry) {
+        return
+      }
 
       if (entry.isIntersecting && !pending.value && !error.value) {
         nextPage()

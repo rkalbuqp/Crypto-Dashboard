@@ -159,3 +159,4 @@ const { data, pending, error } = await useFetch<CryptoDetail>(() =>
     </div>
   </div>
 </template>
+

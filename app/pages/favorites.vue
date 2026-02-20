@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useFavorites } from '../composables/useFavorites'
+import { useFavorites } from '../../composables/useFavorites'
 
 const { favorites, removeFavorite } = useFavorites()
 </script>
@@ -68,3 +68,4 @@ const { favorites, removeFavorite } = useFavorites()
     </div>
   </div>
 </template>
+
