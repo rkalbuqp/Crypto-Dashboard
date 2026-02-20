@@ -29,9 +29,19 @@ type CryptoDetail = {
 export const useCrypto = () => {
   const page = ref(1)
   const coins = ref<CryptoCoin[]>([])
+  const category = ref<string | null>(null)
 
   const { data, pending, error, refresh } = useFetch<CryptoCoin[]>(
-    () => `/api/crypto?page=${page.value}`
+    () => {
+      const params = new URLSearchParams()
+      params.set('page', String(page.value))
+
+      if (category.value) {
+        params.set('category', category.value)
+      }
+
+      return `/api/crypto?${params.toString()}`
+    }
   )
 
   watch(
@@ -54,6 +64,13 @@ export const useCrypto = () => {
     { immediate: true }
   )
 
+  const setCategory = (value: string | null) => {
+    category.value = value
+    page.value = 1
+    coins.value = []
+    refresh()
+  }
+
   const nextPage = () => {
     page.value++
     refresh()
@@ -63,8 +80,10 @@ export const useCrypto = () => {
     data,
     coins,
     page,
+    category,
     pending,
     error,
+    setCategory,
     nextPage
   }
 }

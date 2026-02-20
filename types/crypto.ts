@@ -11,3 +11,8 @@ export interface CryptoCoin {
 export interface MarketChart {
   prices: [number, number][]
 }
+
+export interface CryptoCategory {
+  category_id: string
+  name: string
+}
