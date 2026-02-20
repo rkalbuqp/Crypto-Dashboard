@@ -163,8 +163,19 @@ onBeforeUnmount(() => {
               <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
                 Preço
               </p>
-              <p class="text-[20px] font-semibold tabular-nums text-slate-50">
-                {{ coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
+              <p class="flex items-baseline gap-2 text-[20px] font-semibold tabular-nums">
+                <span class="text-slate-50">
+                  {{ coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
+                </span>
+                <span
+                  class="text-xs font-medium"
+                  :class="coin.price_change_percentage_24h >= 0 ? 'text-green-500' : 'text-red-500'"
+                >
+                  <span class="mr-1">
+                    {{ coin.price_change_percentage_24h >= 0 ? '↑' : '↓' }}
+                  </span>
+                  {{ Math.abs(coin.price_change_percentage_24h).toFixed(2) }}%
+                </span>
               </p>
             </div>
           </NuxtLink>
