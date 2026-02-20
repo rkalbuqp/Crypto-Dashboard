@@ -39,6 +39,10 @@ const { data, pending, error } = await useFetch<CryptoDetail>(() =>
         :alt="data.name"
       />
       <p>{{ data.description.en }}</p>
+      <PriceChart
+        :id="data.id"
+        :days="1"
+      />
     </div>
   </div>
 </template>
