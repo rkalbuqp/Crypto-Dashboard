@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
         <select
           id="category"
           v-model="selectedCategory"
-          class="w-full min-w-45 rounded-md border border-slate-700 bg-slate-900 px-2 py-1 text-sm text-slate-100 md:w-auto"
+          class="w-full min-w-45 rounded-[10px] border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white md:w-auto transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500"
         >
           <option value="">
             Todas
