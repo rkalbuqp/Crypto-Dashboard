@@ -31,13 +31,57 @@ const { data, pending, error } = await useFetch<CryptoDetail>(() =>
 </script>
 
 <template>
-  <div class="mx-auto flex min-h-screen max-w-5xl flex-col gap-8 px-4 py-8">
-    <div v-if="pending">
-      Carregando...
+  <div class="flex flex-col gap-8">
+    <div v-if="pending" class="space-y-6">
+      <section class="section-card overflow-hidden">
+        <div class="flex flex-col gap-6 p-6 md:flex-row md:items-center">
+          <div class="flex items-center gap-4">
+            <div class="skeleton-avatar h-20 w-20" />
+            <div class="space-y-2">
+              <div class="skeleton-line-lg w-40" />
+              <div class="skeleton-text w-24" />
+            </div>
+          </div>
+          <div class="flex flex-1 flex-wrap justify-end gap-4 text-sm">
+            <div class="w-32 space-y-2">
+              <div class="skeleton-text w-24" />
+              <div class="skeleton-line-lg" />
+            </div>
+            <div class="w-32 space-y-2">
+              <div class="skeleton-text w-24" />
+              <div class="skeleton-line-lg" />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)]">
+        <div class="section-card p-4 space-y-3">
+          <div class="skeleton-text w-24" />
+          <div class="space-y-2">
+            <div class="skeleton-text" />
+            <div class="skeleton-text w-5/6" />
+            <div class="skeleton-text w-4/6" />
+          </div>
+        </div>
+        <div class="flex flex-col gap-4">
+          <div class="section-card p-4 space-y-2">
+            <div class="skeleton-text w-24" />
+            <div class="skeleton-text w-32" />
+          </div>
+          <div class="section-card p-4 space-y-2">
+            <div class="skeleton-text w-24" />
+            <div class="flex flex-wrap gap-2">
+              <div class="skeleton-text w-16" />
+              <div class="skeleton-text w-20" />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section-card p-4">
+        <div class="skeleton h-64" />
+      </section>
     </div>
-    <div
-      v-else-if="error"
-    >
+    <div v-else-if="error" class="text-sm text-red-400">
       Erro ao carregar dados.
     </div>
     <div
@@ -102,8 +146,8 @@ const { data, pending, error } = await useFetch<CryptoDetail>(() =>
       </section>
 
       <section class="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)]">
-        <div class="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-          <h2 class="mb-3 text-sm font-medium text-slate-200">
+        <div class="section-card p-4">
+          <h2 class="section-title mb-3">
             Sobre
           </h2>
           <p class="text-sm leading-relaxed text-slate-300">
@@ -116,8 +160,8 @@ const { data, pending, error } = await useFetch<CryptoDetail>(() =>
         </div>
 
         <div class="flex flex-col gap-4">
-          <div class="rounded-xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-300">
-            <h2 class="mb-3 text-sm font-medium text-slate-200">
+          <div class="section-card p-4 text-sm text-slate-300">
+            <h2 class="section-title mb-3">
               Informações
             </h2>
             <p v-if="data.genesis_date">
@@ -132,9 +176,9 @@ const { data, pending, error } = await useFetch<CryptoDetail>(() =>
 
           <div
             v-if="data.categories?.length"
-            class="rounded-xl border border-slate-800 bg-slate-950/60 p-4"
+            class="section-card p-4"
           >
-            <h2 class="mb-3 text-sm font-medium text-slate-200">
+            <h2 class="section-title mb-3">
               Categorias
             </h2>
             <div class="flex flex-wrap gap-2 text-xs">
@@ -159,4 +203,3 @@ const { data, pending, error } = await useFetch<CryptoDetail>(() =>
     </div>
   </div>
 </template>
-

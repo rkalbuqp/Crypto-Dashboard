@@ -5,7 +5,7 @@ const { favorites, removeFavorite } = useFavorites()
 </script>
 
 <template>
-  <div class="mx-auto max-w-6xl px-4 py-8">
+  <div class="flex flex-col gap-6">
     <header class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -17,7 +17,10 @@ const { favorites, removeFavorite } = useFavorites()
       </div>
     </header>
 
-    <div v-if="!favorites.length" class="rounded-lg border border-slate-800 bg-slate-900/60 px-4 py-10">
+    <div
+      v-if="!favorites.length"
+      class="section-card px-4 py-10"
+    >
       <p class="text-sm text-slate-400">
         Você ainda não marcou nenhuma cripto como favorita.
         Volte para a página inicial e clique no botão ❤️ de uma moeda.
@@ -31,7 +34,7 @@ const { favorites, removeFavorite } = useFavorites()
       <div
         v-for="coin in favorites"
         :key="coin.id"
-        class="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900/60 px-4 py-3"
+        class="flex flex-col gap-3 rounded-lg border border-slate-800 bg-slate-900/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
       >
         <div class="flex items-center gap-3">
           <img
@@ -52,7 +55,7 @@ const { favorites, removeFavorite } = useFavorites()
             </span>
           </div>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center justify-between gap-3 sm:justify-end">
           <span class="text-sm font-medium tabular-nums text-slate-50">
             {{ coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
           </span>
@@ -68,4 +71,3 @@ const { favorites, removeFavorite } = useFavorites()
     </div>
   </div>
 </template>
-

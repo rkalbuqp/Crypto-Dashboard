@@ -94,19 +94,21 @@ const chartOptions = {
 </script>
 
 <template>
-  <div style="height: 300px; margin-top: 16px;">
-    <div v-if="pending">
-      Carregando gráfico...
+  <div class="mt-4 h-72">
+    <div v-if="pending" class="h-full rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+      <div class="skeleton h-full w-full" />
     </div>
     <div
       v-else-if="error"
+      class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-red-400"
     >
       Erro ao carregar gráfico.
     </div>
-    <Line
-      v-else
-      :data="chartData"
-      :options="chartOptions"
-    />
+    <div v-else class="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+      <Line
+        :data="chartData"
+        :options="chartOptions"
+      />
+    </div>
   </div>
 </template>

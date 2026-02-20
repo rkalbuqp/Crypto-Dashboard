@@ -21,7 +21,7 @@ const handleToggle = (event: MouseEvent) => {
 <template>
   <NuxtLink
     :to="`/coin/${props.coin.id}`"
-    class="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900/60 px-4 py-3 hover:border-slate-600 hover:bg-slate-800/60"
+    class="flex flex-col gap-3 rounded-lg border border-slate-800 bg-slate-900/60 px-4 py-3 hover:border-slate-600 hover:bg-slate-800/60 sm:flex-row sm:items-center sm:justify-between"
   >
     <div class="flex items-center gap-3">
       <img
@@ -39,7 +39,7 @@ const handleToggle = (event: MouseEvent) => {
         </span>
       </div>
     </div>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center justify-between gap-3 sm:justify-end">
       <div class="flex flex-col items-end gap-1">
         <span class="text-sm font-medium tabular-nums text-slate-50">
           {{ props.coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
