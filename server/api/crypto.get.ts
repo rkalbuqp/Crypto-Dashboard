@@ -28,6 +28,7 @@ type CryptoDetail = {
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const id = typeof query.id === 'string' ? query.id : null
+  const page = Number(query.page ?? 1) || 1
 
   if (id) {
     const data = await $fetch<CryptoDetail>(`https://api.coingecko.com/api/v3/coins/${id}`, {
@@ -49,7 +50,7 @@ export default defineEventHandler(async (event) => {
       vs_currency: 'usd',
       order: 'market_cap_desc',
       per_page: 20,
-      page: 1,
+      page,
       sparkline: false,
       price_change_percentage: '24h'
     }
