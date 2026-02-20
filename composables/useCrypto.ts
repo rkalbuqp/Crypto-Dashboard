@@ -1,4 +1,5 @@
-import { useAsyncData } from 'nuxt/app'
+import { ref } from 'vue'
+import { useAsyncData, useFetch } from 'nuxt/app'
 import type { CryptoCoin } from '../types/crypto'
 
 type CryptoDetail = {
@@ -25,10 +26,25 @@ type CryptoDetail = {
   }
 }
 
-export const useCryptoMarkets = () =>
-  useAsyncData<CryptoCoin[]>('crypto-markets', () =>
-    $fetch('/api/crypto')
+export const useCrypto = () => {
+  const page = ref(1)
+
+  const { data, pending, error, refresh } = useFetch<CryptoCoin[]>(
+    () => `/api/crypto?page=${page.value}`
   )
+
+  const nextPage = () => {
+    page.value++
+    refresh()
+  }
+
+  return {
+    data,
+    pending,
+    error,
+    nextPage
+  }
+}
 
 export const useCryptoCoin = (id: string) =>
   useAsyncData<CryptoDetail>('crypto-coin', () =>
