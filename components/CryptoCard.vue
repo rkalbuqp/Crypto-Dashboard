@@ -1,9 +1,21 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { CryptoCoin } from '../types/crypto'
+import { useFavorites } from '../composables/useFavorites'
 
 const props = defineProps<{
   coin: CryptoCoin
 }>()
+
+const { isFavorite, toggleFavorite } = useFavorites()
+
+const favorited = computed(() => isFavorite(props.coin.id))
+
+const handleToggle = (event: MouseEvent) => {
+  event.preventDefault()
+  event.stopPropagation()
+  toggleFavorite(props.coin)
+}
 </script>
 
 <template>
@@ -27,16 +39,32 @@ const props = defineProps<{
         </span>
       </div>
     </div>
-    <div class="flex flex-col items-end gap-1">
-      <span class="text-sm font-medium tabular-nums text-slate-50">
-        {{ props.coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
-      </span>
-      <span
-        class="text-xs tabular-nums"
-        :class="props.coin.price_change_percentage_24h >= 0 ? 'text-emerald-400' : 'text-red-400'"
+    <div class="flex items-center gap-3">
+      <div class="flex flex-col items-end gap-1">
+        <span class="text-sm font-medium tabular-nums text-slate-50">
+          {{ props.coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
+        </span>
+        <span
+          class="text-xs tabular-nums"
+          :class="props.coin.price_change_percentage_24h >= 0 ? 'text-emerald-400' : 'text-red-400'"
+        >
+          {{ props.coin.price_change_percentage_24h.toFixed(2) }}%
+        </span>
+      </div>
+      <button
+        type="button"
+        class="flex h-8 w-8 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-sm hover:border-pink-500 hover:text-pink-400"
+        :aria-pressed="favorited"
+        :aria-label="favorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
+        @click="handleToggle"
       >
-        {{ props.coin.price_change_percentage_24h.toFixed(2) }}%
-      </span>
+        <span v-if="favorited">
+          ♥
+        </span>
+        <span v-else>
+          ♡
+        </span>
+      </button>
     </div>
   </NuxtLink>
 </template>
