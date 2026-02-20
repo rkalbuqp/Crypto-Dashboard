@@ -66,8 +66,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-6">
-    <header class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+  <div class="flex flex-col gap-10">
+    <header class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div>
         <h1 class="text-2xl font-semibold tracking-tight md:text-3xl">
           Crypto Dashboard
@@ -76,7 +76,7 @@ onBeforeUnmount(() => {
           Acompanhe o mercado em tempo real com filtro por categoria.
         </p>
       </div>
-      <div class="mt-2 flex items-center gap-3 md:mt-0">
+      <div class="mt-3 flex items-center gap-3 md:mt-0">
         <label
           for="category"
           class="text-sm text-slate-400"
@@ -102,102 +102,86 @@ onBeforeUnmount(() => {
       </div>
     </header>
 
-    <section class="section-card">
-      <div class="divide-y divide-slate-800">
-        <div v-if="pending && !coins?.length" class="space-y-3 p-4">
-          <div class="flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-              <div class="skeleton-avatar h-8 w-8" />
-              <div class="space-y-2">
-                <div class="skeleton-text w-32" />
-                <div class="skeleton-text w-20" />
-              </div>
-            </div>
-            <div class="w-32">
-              <div class="skeleton-line-lg" />
-            </div>
-          </div>
-          <div class="flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-              <div class="skeleton-avatar h-8 w-8" />
-              <div class="space-y-2">
-                <div class="skeleton-text w-28" />
-                <div class="skeleton-text w-16" />
-              </div>
-            </div>
-            <div class="w-28">
-              <div class="skeleton-line-lg" />
+    <section>
+      <div
+        v-if="pending && !coins?.length"
+        class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4"
+      >
+        <div
+          v-for="index in 4"
+          :key="index"
+          class="coin-card space-y-4"
+        >
+          <div class="flex items-center gap-3">
+            <div class="skeleton-avatar h-10 w-10" />
+            <div class="space-y-2">
+              <div class="skeleton-text w-32" />
+              <div class="skeleton-text w-20" />
             </div>
           </div>
-        </div>
-        <div v-else>
-          <div
-            v-if="error && !coins?.length"
-            class="p-4 text-sm text-red-400"
-          >
-            Erro ao carregar dados.
-          </div>
-          <div
-            v-else
-            class="flex flex-col gap-2 p-2 sm:p-3"
-          >
-            <div
-              v-for="coin in coins"
-              :key="coin.id"
-              class="rounded-lg px-2 py-1 hover:bg-slate-900/60 sm:px-3 sm:py-2"
-            >
-              <NuxtLink
-                :to="`/coin/${coin.id}`"
-                class="flex items-center justify-between gap-3"
-              >
-                <div class="flex flex-1 items-center gap-3 overflow-hidden">
-                  <img
-                    :src="coin.image"
-                    :alt="coin.name"
-                    class="h-8 w-8 shrink-0 rounded-full bg-slate-800 object-contain"
-                    loading="lazy"
-                  />
-                  <div class="min-w-0">
-                    <p class="truncate text-sm font-medium text-slate-50">
-                      {{ coin.name }}
-                    </p>
-                    <p class="text-xs uppercase text-slate-400">
-                      {{ coin.symbol }}
-                    </p>
-                  </div>
-                </div>
-                <div class="flex flex-col items-end gap-1 text-xs sm:text-sm">
-                  <span class="font-medium tabular-nums text-slate-50">
-                    {{ coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
-                  </span>
-                </div>
-              </NuxtLink>
-            </div>
-
-            <div
-              ref="sentinel"
-              class="h-px"
-            />
-
-            <div
-              v-if="pending && coins?.length"
-              class="p-3 text-center text-sm text-slate-400"
-            >
-              Carregando mais...
-            </div>
+          <div class="space-y-2">
+            <div class="skeleton-line-lg w-24" />
+            <div class="skeleton-text w-20" />
           </div>
         </div>
       </div>
-    </section>
 
-    <div class="mt-2 flex justify-center">
-      <button
-        type="button"
-        class="rounded-md border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-100 hover:border-slate-500 hover:bg-slate-800"
-        @click="nextPage"
-      >
-        Carregar mais
-      </button>
-    </div>
+      <div v-else>
+        <div
+          v-if="error && !coins?.length"
+          class="rounded-xl border border-red-500/40 bg-red-950/40 p-4 text-sm text-red-200"
+        >
+          Erro ao carregar dados.
+        </div>
+        <div
+          v-else
+          class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4"
+        >
+          <NuxtLink
+            v-for="coin in coins"
+            :key="coin.id"
+            :to="`/coin/${coin.id}`"
+            class="coin-card flex flex-col gap-4"
+          >
+            <div class="flex items-center gap-3">
+              <img
+                :src="coin.image"
+                :alt="coin.name"
+                class="h-10 w-10 shrink-0 rounded-full bg-slate-800 object-contain"
+                loading="lazy"
+              />
+              <div class="min-w-0">
+                <p class="truncate text-base font-semibold text-slate-50">
+                  {{ coin.name }}
+                </p>
+                <p class="text-xs uppercase text-slate-400">
+                  {{ coin.symbol }}
+                </p>
+              </div>
+            </div>
+            <div class="flex flex-col items-start gap-1">
+              <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                Preço
+              </p>
+              <p class="text-xl font-semibold tabular-nums text-slate-50">
+                {{ coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
+              </p>
+            </div>
+          </NuxtLink>
+        </div>
+
+        <div
+          ref="sentinel"
+          class="h-px"
+        />
+
+        <div
+          v-if="pending && coins?.length"
+          class="mt-6 text-center text-sm text-slate-300"
+        >
+          Carregando mais...
+        </div>
+      </div>
+    </section>
   </div>
 </template>

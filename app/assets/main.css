@@ -2,7 +2,8 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-50 antialiased;
+    @apply text-slate-50 antialiased;
+    background: linear-gradient(135deg, #0f172a, #020617);
   }
 }
 
@@ -12,7 +13,10 @@
   }
 
   .app-container {
-    @apply mx-auto w-full max-w-6xl px-4 py-8;
+    @apply w-full px-4 py-10;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .section-card {
@@ -21,6 +25,21 @@
 
   .section-title {
     @apply text-sm font-medium text-slate-200;
+  }
+
+  .coin-card {
+    background-color: #111827;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.45);
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out,
+      border-color 0.15s ease-out, background-color 0.15s ease-out;
+    border: 1px solid rgba(15, 23, 42, 0.8);
+  }
+
+  .coin-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.75);
   }
 }
 
