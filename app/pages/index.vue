@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useFetch } from 'nuxt/app'
 import { useCrypto } from '../../composables/useCrypto'
 import type { CryptoCategory } from '../../types/crypto'
@@ -11,6 +11,46 @@ const { data: categories } = await useFetch<CryptoCategory[]>(
 )
 
 const selectedCategory = ref<string>('')
+const searchTerm = ref('')
+
+const normalize = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '')
+
+const fuzzyMatch = (query: string, target: string) => {
+  if (!query) {
+    return true
+  }
+
+  let qi = 0
+
+  for (let i = 0; i < target.length && qi < query.length; i++) {
+    if (target[i] === query[qi]) {
+      qi++
+    }
+  }
+
+  return qi === query.length
+}
+
+const filteredCoins = computed(() => {
+  const q = normalize(searchTerm.value)
+
+  if (!q) {
+    return coins.value
+  }
+
+  return coins.value.filter((coin) => {
+    const name = normalize(coin.name)
+    const symbol = normalize(coin.symbol)
+    const id = normalize(coin.id)
+
+    return fuzzyMatch(q, name) || fuzzyMatch(q, symbol) || fuzzyMatch(q, id)
+  })
+})
 
 watch(
   selectedCategory,
@@ -23,92 +63,61 @@ watch(
     setCategory(value)
   }
 )
-
-const sentinel = ref<HTMLElement | null>(null)
-
-let observer: IntersectionObserver | null = null
-
-onMounted(() => {
-  if (!('IntersectionObserver' in window)) {
-    return
-  }
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      const entry = entries[0]
-
-      if (!entry) {
-        return
-      }
-
-      if (entry.isIntersecting && !pending.value && hasMore.value) {
-        nextPage()
-      }
-    },
-    {
-      root: null,
-      rootMargin: '200px 0px',
-      threshold: 0.1
-    }
-  )
-
-  watch(
-    sentinel,
-    (el) => {
-      if (!observer || !el) {
-        return
-      }
-
-      observer.observe(el)
-    },
-    { immediate: true }
-  )
-})
-
-onBeforeUnmount(() => {
-  if (observer) {
-    observer.disconnect()
-    observer = null
-  }
-})
 </script>
 
 <template>
   <div class="relative">
     <header class="fixed inset-x-0 top-0 z-20 border-b border-white/10 bg-slate-900/80 backdrop-blur-md">
       <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 lg:px-10">
-        <div class="flex flex-col">
-          <span class="text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">
-            CryptoDash
-          </span>
-          <h1 class="mt-1 text-[32px] font-bold tracking-tight">
-            Crypto Dashboard
-          </h1>
-        </div>
-        <div class="flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
-          <div class="flex items-center gap-3">
-            <label
-              for="category"
-              class="text-xs text-slate-400"
-            >
-              Filtrar por categoria:
-            </label>
-            <select
-              id="category"
-              v-model="selectedCategory"
-              class="w-full min-w-45 rounded-[10px] border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white md:w-auto transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500"
-            >
-              <option value="">
-                Todas
-              </option>
-              <option
-                v-for="cat in categories || []"
-                :key="cat.category_id"
-                :value="cat.category_id"
+        <div class="flex flex-1 flex-col gap-3 md:flex-row md:items-center md:gap-6">
+          <div class="flex flex-1 flex-col">
+            <span class="text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">
+              CryptoDash
+            </span>
+            <h1 class="mt-1 text-[32px] font-bold tracking-tight">
+              Crypto Dashboard
+            </h1>
+          </div>
+          <div class="flex flex-1 flex-col gap-3 md:flex-row md:items-center md:justify-end md:gap-4">
+            <div class="flex flex-1 items-center gap-3 md:flex-none">
+              <label
+                for="category"
+                class="text-xs text-slate-400"
               >
-                {{ cat.name }}
-              </option>
-            </select>
+                Filtrar por categoria:
+              </label>
+              <select
+                id="category"
+                v-model="selectedCategory"
+                class="w-full min-w-45 rounded-[10px] border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white md:w-auto transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500"
+              >
+                <option value="">
+                  Todas
+                </option>
+                <option
+                  v-for="cat in categories || []"
+                  :key="cat.category_id"
+                  :value="cat.category_id"
+                >
+                  {{ cat.name }}
+                </option>
+              </select>
+            </div>
+            <div class="flex flex-1 items-center gap-3 md:flex-none">
+              <label
+                for="search"
+                class="text-xs text-slate-400"
+              >
+                Buscar:
+              </label>
+              <input
+                id="search"
+                v-model="searchTerm"
+                type="text"
+                placeholder="Digite o nome ou símbolo..."
+                class="w-full min-w-45 rounded-[10px] border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white md:w-64 transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500"
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -151,7 +160,7 @@ onBeforeUnmount(() => {
           class="flex flex-wrap gap-8"
         >
           <NuxtLink
-            v-for="coin in coins"
+            v-for="coin in filteredCoins"
             v-memo="[coin.id]"
             :key="coin.id"
             :to="`/coin/${coin.id}`"
@@ -195,19 +204,21 @@ onBeforeUnmount(() => {
           </NuxtLink>
         </div>
 
-        <div
-          ref="sentinel"
-          class="h-px"
-        />
-
-        <div
-          v-if="pending && coins?.length"
-          class="mt-6 text-center text-sm text-slate-300"
-        >
-          Carregando mais...
-        </div>
       </div>
       </section>
+      <div
+        v-if="hasMore"
+        class="mt-4 flex justify-center"
+      >
+        <button
+          type="button"
+          class="inline-flex items-center justify-center rounded-xl bg-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-colors duration-150 ease-out hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+          :disabled="pending"
+          @click="nextPage"
+        >
+          {{ pending ? 'Carregando...' : 'Carregar mais' }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
