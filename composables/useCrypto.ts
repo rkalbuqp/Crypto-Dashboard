@@ -30,6 +30,7 @@ export const useCrypto = () => {
   const page = ref(1)
   const coins = ref<CryptoCoin[]>([])
   const category = ref<string | null>(null)
+  const hasMore = ref(true)
 
   const { data, pending, error, refresh } = useFetch<CryptoCoin[]>(
     () => {
@@ -53,6 +54,7 @@ export const useCrypto = () => {
 
       if (page.value === 1) {
         coins.value = newPage
+        hasMore.value = newPage.length > 0
         return
       }
 
@@ -60,6 +62,9 @@ export const useCrypto = () => {
       const merged = [...coins.value, ...newPage.filter((coin) => !existingIds.has(coin.id))]
 
       coins.value = merged
+      if (newPage.length === 0) {
+        hasMore.value = false
+      }
     },
     { immediate: true }
   )
@@ -68,6 +73,7 @@ export const useCrypto = () => {
     category.value = value
     page.value = 1
     coins.value = []
+    hasMore.value = true
     refresh()
   }
 
@@ -84,7 +90,8 @@ export const useCrypto = () => {
     pending,
     error,
     setCategory,
-    nextPage
+    nextPage,
+    hasMore
   }
 }
 

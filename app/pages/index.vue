@@ -4,7 +4,7 @@ import { useFetch } from 'nuxt/app'
 import { useCrypto } from '../../composables/useCrypto'
 import type { CryptoCategory } from '../../types/crypto'
 
-const { coins, pending, error, nextPage, setCategory } = useCrypto()
+const { coins, pending, error, nextPage, setCategory, hasMore } = useCrypto()
 
 const { data: categories } = await useFetch<CryptoCategory[]>(
   '/api/crypto/categories'
@@ -41,7 +41,7 @@ onMounted(() => {
         return
       }
 
-      if (entry.isIntersecting && !pending.value && !error.value) {
+      if (entry.isIntersecting && !pending.value && hasMore.value) {
         nextPage()
       }
     },
@@ -52,9 +52,17 @@ onMounted(() => {
     }
   )
 
-  if (sentinel.value) {
-    observer.observe(sentinel.value)
-  }
+  watch(
+    sentinel,
+    (el) => {
+      if (!observer || !el) {
+        return
+      }
+
+      observer.observe(el)
+    },
+    { immediate: true }
+  )
 })
 
 onBeforeUnmount(() => {
@@ -110,12 +118,12 @@ onBeforeUnmount(() => {
       <section>
       <div
         v-if="pending && !coins?.length"
-        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        class="flex flex-wrap gap-8"
       >
         <div
           v-for="index in 4"
           :key="index"
-          class="coin-card space-y-4"
+          class="coin-card w-[260px] flex-none space-y-4"
         >
           <div class="flex items-center gap-3">
             <div class="skeleton-avatar h-10 w-10" />
@@ -140,13 +148,14 @@ onBeforeUnmount(() => {
         </div>
         <div
           v-else
-          class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          class="flex flex-wrap gap-8"
         >
           <NuxtLink
             v-for="coin in coins"
+            v-memo="[coin.id]"
             :key="coin.id"
             :to="`/coin/${coin.id}`"
-            class="coin-card card-appear flex flex-col gap-4"
+            class="coin-card card-appear flex w-[260px] flex-none flex-col gap-4"
           >
             <div class="flex items-center gap-3">
               <img
@@ -199,17 +208,6 @@ onBeforeUnmount(() => {
         </div>
       </div>
       </section>
-
-      <div class="mt-4 flex justify-center">
-        <button
-          type="button"
-          class="inline-flex items-center justify-center rounded-xl bg-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-colors duration-150 ease-out hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
-          :disabled="pending"
-          @click="nextPage"
-        >
-          {{ pending ? 'Carregando...' : 'Carregar mais' }}
-        </button>
-      </div>
     </div>
   </div>
 </template>

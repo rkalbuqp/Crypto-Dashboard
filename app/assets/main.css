@@ -14,9 +14,6 @@
 
   .app-container {
     @apply w-full px-6 py-10 md:px-8 xl:px-10;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
   }
 
   .section-card {

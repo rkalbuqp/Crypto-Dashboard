@@ -1,4 +1,4 @@
-import { getQuery } from 'h3'
+import { createError, getQuery } from 'h3'
 import type { CryptoCoin } from '../../types/crypto'
 
 type CryptoDetail = {
@@ -25,6 +25,14 @@ type CryptoDetail = {
   }
 }
 
+type ListCacheEntry = {
+  data: CryptoCoin[]
+  timestamp: number
+}
+
+const LIST_CACHE_TTL_MS = 60_000
+const listCache = new Map<string, ListCacheEntry>()
+
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const id = typeof query.id === 'string' ? query.id : null
@@ -46,17 +54,41 @@ export default defineEventHandler(async (event) => {
     return data
   }
 
-  const data = await $fetch<CryptoCoin[]>('https://api.coingecko.com/api/v3/coins/markets', {
-    params: {
-      vs_currency: 'usd',
-      order: 'market_cap_desc',
-      per_page: 20,
-      page,
-      sparkline: false,
-      price_change_percentage: '24h',
-      ...(category ? { category } : {})
-    }
-  })
+  const cacheKey = `${page}-${category ?? 'all'}`
+  const cached = listCache.get(cacheKey)
 
-  return data
+  if (cached && Date.now() - cached.timestamp < LIST_CACHE_TTL_MS) {
+    return cached.data
+  }
+
+  try {
+    const data = await $fetch<CryptoCoin[]>('https://api.coingecko.com/api/v3/coins/markets', {
+      params: {
+        vs_currency: 'usd',
+        order: 'market_cap_desc',
+        per_page: 20,
+        page,
+        sparkline: false,
+        price_change_percentage: '24h',
+        ...(category ? { category } : {})
+      }
+    })
+
+    listCache.set(cacheKey, { data, timestamp: Date.now() })
+
+    return data
+  } catch (error: any) {
+    if (error?.statusCode === 429) {
+      if (cached) {
+        return cached.data
+      }
+
+      throw createError({
+        statusCode: 503,
+        statusMessage: 'Rate limit da CoinGecko atingido. Tente novamente em alguns minutos.'
+      })
+    }
+
+    throw error
+  }
 })
