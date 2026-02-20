@@ -13,7 +13,7 @@
   }
 
   .app-container {
-    @apply w-full px-4 py-10;
+    @apply w-full px-6 py-10 md:px-8 xl:px-10;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
@@ -28,13 +28,14 @@
   }
 
   .coin-card {
-    background-color: #111827;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.45);
     transition: transform 0.15s ease-out, box-shadow 0.15s ease-out,
       border-color 0.15s ease-out, background-color 0.15s ease-out;
-    border: 1px solid rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    backdrop-filter: blur(8px);
   }
 
   .coin-card:hover {

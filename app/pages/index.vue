@@ -66,46 +66,49 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-10">
-    <header class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h1 class="mb-6 text-[32px] font-bold tracking-tight">
-          Crypto Dashboard
-        </h1>
-        <p class="mt-1 text-sm text-slate-400">
-          Acompanhe o mercado em tempo real com filtro por categoria.
-        </p>
-      </div>
-      <div class="mt-3 flex items-center gap-3 md:mt-0">
-        <label
-          for="category"
-          class="text-xs text-slate-400"
-        >
-          Filtrar por categoria:
-        </label>
-        <select
-          id="category"
-          v-model="selectedCategory"
-          class="w-full min-w-45 rounded-[10px] border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white md:w-auto transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500"
-        >
-          <option value="">
-            Todas
-          </option>
-          <option
-            v-for="cat in categories || []"
-            :key="cat.category_id"
-            :value="cat.category_id"
+  <div class="relative">
+    <header class="fixed inset-x-0 top-0 z-20 border-b border-white/10 bg-slate-900/80 backdrop-blur-md">
+      <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 lg:px-10">
+        <div class="flex flex-col">
+          <span class="text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">
+            CryptoDash
+          </span>
+          <h1 class="mt-1 text-[32px] font-bold tracking-tight">
+            Crypto Dashboard
+          </h1>
+        </div>
+        <div class="flex items-center gap-3">
+          <label
+            for="category"
+            class="text-xs text-slate-400"
           >
-            {{ cat.name }}
-          </option>
-        </select>
+            Filtrar por categoria:
+          </label>
+          <select
+            id="category"
+            v-model="selectedCategory"
+            class="w-full min-w-45 rounded-[10px] border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white md:w-auto transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500"
+          >
+            <option value="">
+              Todas
+            </option>
+            <option
+              v-for="cat in categories || []"
+              :key="cat.category_id"
+              :value="cat.category_id"
+            >
+              {{ cat.name }}
+            </option>
+          </select>
+        </div>
       </div>
     </header>
 
-    <section>
+    <div class="flex flex-col gap-10 pt-32">
+      <section>
       <div
         v-if="pending && !coins?.length"
-        class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4"
+        class="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-4"
       >
         <div
           v-for="index in 4"
@@ -135,7 +138,7 @@ onBeforeUnmount(() => {
         </div>
         <div
           v-else
-          class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4"
+          class="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-4"
         >
           <NuxtLink
             v-for="coin in coins"
@@ -193,17 +196,18 @@ onBeforeUnmount(() => {
           Carregando mais...
         </div>
       </div>
-    </section>
+      </section>
 
-    <div class="mt-8 flex justify-center">
-      <button
-        type="button"
-        class="inline-flex items-center justify-center rounded-xl bg-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-colors duration-150 ease-out hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
-        :disabled="pending"
-        @click="nextPage"
-      >
-        {{ pending ? 'Carregando...' : 'Carregar mais' }}
-      </button>
+      <div class="mt-4 flex justify-center">
+        <button
+          type="button"
+          class="inline-flex items-center justify-center rounded-xl bg-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-colors duration-150 ease-out hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+          :disabled="pending"
+          @click="nextPage"
+        >
+          {{ pending ? 'Carregando...' : 'Carregar mais' }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
